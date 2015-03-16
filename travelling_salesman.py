@@ -33,14 +33,17 @@ def main(argv):
 		for i in range(0, num_cities):
 			distances[i] = distances[i][0:num_cities]
 	try:
+		#initialise tau and delta arrays
 		graph = graphbit.GraphBit(num_cities, distances)
 		best_path_value = None
 		best_path_cost = sys.maxint
 		for i in range(0, num_repetitions):
-			#print "Repetition %s" % i
+			print "Started colony %s" % i
+			#resets tau after every iteration
 			graph.reset_tau()
+			#initialise group of workers
 			workers = biggroup.BigGroup(graph, num_ants, num_iterations)
-			print "Colony Started"
+			#start testing
 			workers.start()
 			if workers.best_path_cost < best_path_cost:
 				#print "Colony Path"
@@ -56,6 +59,7 @@ def main(argv):
 			print city_names[node] + " ",
 			city_vec.append(city_names[node])
 		print "\nBest path cost = %s\n" % (best_path_cost,)
+		#save results to file
 		results = [best_path_value, city_vec, best_path_cost]
 		pickle.dump(results, open(argv[2], 'w+'))
 	except Exception, e:

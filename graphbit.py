@@ -17,19 +17,13 @@ class GraphBit:
 		self.tau_matrix[r][s] = new_value
 
 	def reset_tau(self):
-		avg = self.average_delta()
+		avg = self.average(self.delta_matrix)
 		self.tau0 = 1.0 / (self.num_nodes * 0.5 * avg)
 		#print "Average = %s" % (avg,)
 		#print "Tau0 = %s" % (self.tau0)
 		for r in range(0, self.num_nodes):
 			for s in range(0, self.num_nodes):
 				self.tau_matrix[r][s] = self.tau0
-
-	def average_delta(self):
-		return self.average(self.delta_matrix)
-
-	def average_tau(self):
-		return self.average(self.tau_matrix)
 
 	def average(self, matrix):
 		sum = 0
