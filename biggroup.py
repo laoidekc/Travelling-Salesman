@@ -14,7 +14,6 @@ class BigGroup:
 		self.best_path_cost = sys.maxint
 		self.best_path_value = None
 		self.bpm = None
-		self.lbpi = 0
 
 	def start(self):
 		self.ants = self.c_workers()
@@ -49,7 +48,6 @@ class BigGroup:
 			self.best_path_cost = ant.path_cost
 			self.bpm = ant.path_mat
 			self.best_path_value = ant.path_vec
-			self.lbpi = self.iter_counter
 		if self.ant_counter == len(self.ants):
 			self.avg_path_cost /= len(self.ants)
 			print "Best: %s, %s, %s, %s" % (
@@ -78,5 +76,5 @@ class BigGroup:
 					delt_tau = self.bpm[r][s] / self.best_path_cost
 					evaporation = (1 - self.Alpha) * self.graph.tau_matrix[r][s]
 					deposition = self.Alpha * delt_tau
-					self.graph.update_tau(r, s, evaporation + deposition)
+					self.graph.tau_matrix[r][s] =  evaporation + deposition
 

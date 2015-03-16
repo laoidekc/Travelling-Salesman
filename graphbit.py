@@ -10,11 +10,8 @@ class GraphBit:
 			for i in range(0, num_nodes):
 				self.tau_matrix.append([0] * num_nodes)
 
-	def etha(self, r, s):
+	def eta(self, r, s):
 		return 1.0 / self.delta_matrix[r][s]
-
-	def update_tau(self, r, s, new_value):
-		self.tau_matrix[r][s] = new_value
 
 	def reset_tau(self):
 		avg = self.average(self.delta_matrix)

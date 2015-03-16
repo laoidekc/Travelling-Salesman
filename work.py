@@ -51,7 +51,7 @@ class Work():
 			for node in self.ntv.values():
 				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
-				val = graph.tau_matrix[curr_node][node] * math.pow(graph.etha(curr_node, node), self.Beta)
+				val = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
 				if val > max_val:
 					max_val = val
 					max_node = node
@@ -62,13 +62,13 @@ class Work():
 			for node in self.ntv.values():
 				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
-				sum += graph.tau_matrix[curr_node][node] * math.pow(graph.etha(curr_node, node), self.Beta)
+				sum += graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
 			if sum == 0:
 				raise Exception("sum = 0")
 			avg = sum / len(self.ntv)
 			#print "avg = %s" % (avg,)
 			for node in self.ntv.values():
-				p = graph.tau_matrix[curr_node][node] * math.pow(graph.etha(curr_node, node), self.Beta)
+				p = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
 				if p > avg:
 					#print "p = %s" % (p,)
 					max_node = node
@@ -82,6 +82,5 @@ class Work():
 	def local_updating_rule(self, curr_node, next_node):
 		#Update the pheromones on the tau matrix to represent transitions of the ants
 		graph = self.grouping.graph
-		val = (1 - self.Rho) * graph.tau_matrix[curr_node][next_node] + (self.Rho * graph.tau0)
-		graph.update_tau(curr_node, next_node, val)
+		graph.tau_matrix[curr_node][next_node] = (1 - self.Rho) * graph.tau_matrix[curr_node][next_node] + (self.Rho * graph.tau0)
 
