@@ -76,7 +76,7 @@ class BigGroup:
 			for s in range(0, self.graph.num_nodes):
 				if r != s:
 					delt_tau = self.bpm[r][s] / self.best_path_cost
-					evaporation = (1 - self.Alpha) * self.graph.tau(r, s)
+					evaporation = (1 - self.Alpha) * self.graph.tau_matrix[r][s]
 					deposition = self.Alpha * delt_tau
 					self.graph.update_tau(r, s, evaporation + deposition)
 

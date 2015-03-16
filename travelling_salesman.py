@@ -7,10 +7,12 @@ import biggroup
 import traceback
 
 def main(argv):
+	#seeding random number generator
 	random.seed(227)
 
 	num_cities = int(argv[0])
 
+	#decides parameters based on number of cities specified
 	if num_cities <= 10:
 		num_ants = 20
 		num_iterations = 12
@@ -20,34 +22,33 @@ def main(argv):
 		num_iterations = 20
 		num_repetitions = 1
 
+	#loads names and distances between cities
 	city_data = pickle.load(open(argv[1], "r"))
 	city_names = city_data[0]
 	distances = city_data[1]
-	#why are we doing this?
+
+	#confines the array of city distances to the number 
 	if num_cities < len(distances):
 		distances = distances[0:num_cities]
 		for i in range(0, num_cities):
 			distances[i] = distances[i][0:num_cities]
-
-
-
 	try:
 		graph = graphbit.GraphBit(num_cities, distances)
 		best_path_value = None
 		best_path_cost = sys.maxint
 		for i in range(0, num_repetitions):
-#			print "Repetition %s" % i
+			#print "Repetition %s" % i
 			graph.reset_tau()
 			workers = biggroup.BigGroup(graph, num_ants, num_iterations)
 			print "Colony Started"
 			workers.start()
 			if workers.best_path_cost < best_path_cost:
-#				print "Colony Path"
+				#print "Colony Path"
 				best_path_value = workers.best_path_value
 				best_path_cost = workers.best_path_cost
 
 		print "\n------------------------------------------------------------"
-		print "					 Results								"
+		print "	                 Results                                "
 		print "------------------------------------------------------------"
 		print "\nBest path = %s" % (best_path_value,)
 		city_vec = []

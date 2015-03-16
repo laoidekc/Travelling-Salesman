@@ -27,12 +27,12 @@ class Work():
 		graph = self.grouping.graph
 		while not self.end():
 			new_node = self.state_transition_rule(self.curr_node)
-			self.path_cost += graph.delta(self.curr_node, new_node)
+			self.path_cost += graph.delta_matrix[self.curr_node][new_node]
 			self.path_vec.append(new_node)
 			self.path_mat[self.curr_node][new_node] = 1 
 			self.local_updating_rule(self.curr_node, new_node)
 			self.curr_node = new_node
-		self.path_cost += graph.delta(self.path_vec[-1], self.path_vec[0])
+		self.path_cost += graph.delta_matrix[self.path_vec[-1]][self.path_vec[0]]
 		self.grouping.update(self)
 		self.__init__(self.ID, self.start_node, self.grouping)
 
@@ -45,33 +45,32 @@ class Work():
 		q = random.random()
 		max_node = -1
 		if q < self.Q0:
-#			print "Exploitation"
+			#print "Exploitation"
 			max_val = -1
 			val = None
 			for node in self.ntv.values():
-				if graph.tau(curr_node, node) == 0:
+				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
-				val = graph.tau(curr_node, node) * math.pow(graph.etha(curr_node, node), self.Beta)
+				val = graph.tau_matrix[curr_node][node] * math.pow(graph.etha(curr_node, node), self.Beta)
 				if val > max_val:
 					max_val = val
 					max_node = node
 		else:
-			#Bob was here
-#			print "Exploration"
+			#print "Exploration"
 			sum = 0
 			node = -1
 			for node in self.ntv.values():
-				if graph.tau(curr_node, node) == 0:
+				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
-				sum += graph.tau(curr_node, node) * math.pow(graph.etha(curr_node, node), self.Beta)
+				sum += graph.tau_matrix[curr_node][node] * math.pow(graph.etha(curr_node, node), self.Beta)
 			if sum == 0:
 				raise Exception("sum = 0")
 			avg = sum / len(self.ntv)
-#			print "avg = %s" % (avg,)
+			#print "avg = %s" % (avg,)
 			for node in self.ntv.values():
-				p = graph.tau(curr_node, node) * math.pow(graph.etha(curr_node, node), self.Beta)
+				p = graph.tau_matrix[curr_node][node] * math.pow(graph.etha(curr_node, node), self.Beta)
 				if p > avg:
-#					print "p = %s" % (p,)
+					#print "p = %s" % (p,)
 					max_node = node
 			if max_node == -1:
 				max_node = node
@@ -83,6 +82,6 @@ class Work():
 	def local_updating_rule(self, curr_node, next_node):
 		#Update the pheromones on the tau matrix to represent transitions of the ants
 		graph = self.grouping.graph
-		val = (1 - self.Rho) * graph.tau(curr_node, next_node) + (self.Rho * graph.tau0)
+		val = (1 - self.Rho) * graph.tau_matrix[curr_node][next_node] + (self.Rho * graph.tau0)
 		graph.update_tau(curr_node, next_node, val)
 
