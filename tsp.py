@@ -172,7 +172,7 @@ class BigGroup:
 
 class GraphBit:
 	def __init__(self, num_nodes, delta_mat, tau_mat=None):
-		print len(delta_mat)
+#		print len(delta_mat)
 		if len(delta_mat) != num_nodes:
 			raise Exception("len(delta) != num_nodes")
 		self.num_nodes = num_nodes
@@ -197,8 +197,8 @@ class GraphBit:
 	def reset_tau(self):
 		avg = self.average_delta()
 		self.tau0 = 1.0 / (self.num_nodes * 0.5 * avg)
-		print "Average = %s" % (avg,)
-		print "Tau0 = %s" % (self.tau0)
+#		print "Average = %s" % (avg,)
+#		print "Tau0 = %s" % (self.tau0)
 		for r in range(0, self.num_nodes):
 			for s in range(0, self.num_nodes):
 				self.tau_mat[r][s] = self.tau0
@@ -227,12 +227,10 @@ import traceback
 
 def main(argv):
 	random.seed(227)
-	nm = 10
 
-	if len(argv) >= 3 and argv[0]:
-		nm = int(argv[0])
+	num_cities = int(argv[0])
 
-	if nm <= 10:
+	if num_cities <= 10:
 		num_ants = 20
 		num_iterations = 12
 		num_repetitions = 1
@@ -241,19 +239,19 @@ def main(argv):
 		num_iterations = 20
 		num_repetitions = 1
 
-	stuff = pickle.load(open(argv[1], "r"))
-	cities = stuff[0]
-	cm = stuff[1]
+	city_data = pickle.load(open(argv[1], "r"))
+	city_names = city_data[0]
+	distances = city_data[1]
 	#why are we doing this?
-	if nm < len(cm):
-		cm = cm[0:nm]
-		for i in range(0, nm):
-			cm[i] = cm[i][0:nm]
+	if num_cities < len(distances):
+		distances = distances[0:num_cities]
+		for i in range(0, num_cities):
+			distances[i] = distances[i][0:num_cities]
 
 
 
 	try:
-		graph = GraphBit(nm, cm)
+		graph = GraphBit(num_cities, distances)
 		best_path_value = None
 		best_path_cost = sys.maxint
 		for i in range(0, num_repetitions):
@@ -263,7 +261,7 @@ def main(argv):
 			print "Colony Started"
 			workers.start()
 			if workers.best_path_cost < best_path_cost:
-				print "Colony Path"
+#				print "Colony Path"
 				best_path_value = workers.best_path_value
 				best_path_cost = workers.best_path_cost
 
@@ -273,8 +271,8 @@ def main(argv):
 		print "\nBest path = %s" % (best_path_value,)
 		city_vec = []
 		for node in best_path_value:
-			print cities[node] + " ",
-			city_vec.append(cities[node])
+			print city_names[node] + " ",
+			city_vec.append(city_names[node])
 		print "\nBest path cost = %s\n" % (best_path_cost,)
 		results = [best_path_value, city_vec, best_path_cost]
 		pickle.dump(results, open(argv[2], 'w+'))
