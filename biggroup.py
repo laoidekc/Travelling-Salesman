@@ -3,6 +3,7 @@ import sys
 import random
 
 class BigGroup:
+	#initialises ant colony
 	def __init__(self, graph, num_ants, num_iterations):
 		self.graph = graph
 		self.num_ants = num_ants
@@ -10,11 +11,13 @@ class BigGroup:
 		self.Alpha = 0.1
 		self.reset()
 
+	#ensures that there is no preset best path
 	def reset(self):
 		self.best_path_cost = sys.maxint
 		self.best_path_value = None
 		self.bpm = None
 
+	#starts the testing
 	def start(self):
 		self.ants = self.c_workers()
 		self.iter_counter = 0
@@ -24,6 +27,7 @@ class BigGroup:
 			# Note that this will help refine the results future iterations.
 			self.global_updating_rule()
 
+	#
 	def iteration(self):
 		self.avg_path_cost = 0
 		self.ant_counter = 0
@@ -31,16 +35,8 @@ class BigGroup:
 		for ant in self.ants:
 			ant.run()
 
-
-
-	def num_iterations(self):
-		return self.num_iterations
-
-	def iteration_counter(self):
-		return self.iter_counter
-
 	def update(self, ant):
-#		print "Update called by %s" % (ant.ID,)
+		#print "Update called by %s" % (ant.ID,)
 		self.ant_counter += 1
 		self.avg_path_cost += ant.path_cost
 		if ant.path_cost < self.best_path_cost:
@@ -49,12 +45,8 @@ class BigGroup:
 			self.best_path_value = ant.path_vec
 		if self.ant_counter == len(self.ants):
 			self.avg_path_cost /= len(self.ants)
-			print "Best: %s, %s, %s, %s" % (
-				self.best_path_value, self.best_path_cost, self.iter_counter, self.avg_path_cost,)
+			print "Iteration %s: %s - %s" % (self.iter_counter, self.best_path_value, self.best_path_cost,)
 
-
-	def done(self):
-		return self.iter_counter == self.num_iterations
 
 	def c_workers(self):
 		self.reset()
@@ -66,7 +58,6 @@ class BigGroup:
 		return ants
  
 	def global_updating_rule(self):
-		#can someone explain this
 		evaporation = 0
 		deposition = 0
 		for r in range(0, self.graph.num_nodes):

@@ -1,6 +1,7 @@
 class GraphBit:
 	def __init__(self, num_nodes, delta_matrix, tau_matrix=None):
-#		print len(delta_matrix)
+		#print len(delta_matrix)
+		#ensures the size of the array matches the expected number of nodes
 		if len(delta_matrix) != num_nodes:
 			raise Exception("len(delta) != num_nodes")
 		self.num_nodes = num_nodes
@@ -10,9 +11,11 @@ class GraphBit:
 			for i in range(0, num_nodes):
 				self.tau_matrix.append([0] * num_nodes)
 
+	#returns a variable defined by delta
 	def eta(self, r, s):
 		return 1.0 / self.delta_matrix[r][s]
 
+	#resets tau when a new iteration starts
 	def reset_tau(self):
 		avg = self.average(self.delta_matrix)
 		self.tau0 = 1.0 / (self.num_nodes * 0.5 * avg)
@@ -22,6 +25,7 @@ class GraphBit:
 			for s in range(0, self.num_nodes):
 				self.tau_matrix[r][s] = self.tau0
 
+	#finds the average value of an array
 	def average(self, matrix):
 		sum = 0
 		for r in range(0, self.num_nodes):

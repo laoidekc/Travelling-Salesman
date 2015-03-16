@@ -22,7 +22,6 @@ class Work():
 		for i in range(0, self.graph.num_nodes):
 			self.path_mat.append([0] * self.graph.num_nodes)
 
-	#could this be simpler?
 	def run(self):
 		graph = self.grouping.graph
 		while not self.end():
