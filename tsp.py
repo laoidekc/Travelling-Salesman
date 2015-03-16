@@ -1,3 +1,6 @@
+import pickle
+import sys
+import traceback
 import math
 import random
 
@@ -85,12 +88,6 @@ class Work():
 		graph = self.grouping.graph
 		val = (1 - self.Rho) * graph.tau(curr_node, next_node) + (self.Rho * graph.tau0)
 		graph.update_tau(curr_node, next_node, val)
-
-
-import random
-import sys
-
-
 
 class BigGroup:
 	def __init__(self, graph, num_ants, num_iterations):
@@ -219,11 +216,6 @@ class GraphBit:
 
 		avg = sum / (self.num_nodes * self.num_nodes)
 		return avg
-
-import pickle
-import sys
-import traceback
-
 
 def main(argv):
 	random.seed(227)
