@@ -45,7 +45,7 @@ class Work():
 		q = random.random()
 		max_node = -1
 		if q < self.Q0:
-			print "Exploitation"
+#			print "Exploitation"
 			max_val = -1
 			val = None
 			for node in self.ntv.values():
@@ -57,7 +57,7 @@ class Work():
 					max_node = node
 		else:
 			#Bob was here
-			print "Exploration"
+#			print "Exploration"
 			sum = 0
 			node = -1
 			for node in self.ntv.values():
@@ -67,11 +67,11 @@ class Work():
 			if sum == 0:
 				raise Exception("sum = 0")
 			avg = sum / len(self.ntv)
-			print "avg = %s" % (avg,)
+#			print "avg = %s" % (avg,)
 			for node in self.ntv.values():
 				p = graph.tau(curr_node, node) * math.pow(graph.etha(curr_node, node), self.Beta)
 				if p > avg:
-					print "p = %s" % (p,)
+#					print "p = %s" % (p,)
 					max_node = node
 			if max_node == -1:
 				max_node = node
@@ -101,8 +101,8 @@ class BigGroup:
 		self.reset()
 
 	def reset(self):
-		self.bpc = sys.maxint
-		self.bpv = None
+		self.best_path_cost = sys.maxint
+		self.best_path_value = None
 		self.bpm = None
 		self.lbpi = 0
 
@@ -132,18 +132,18 @@ class BigGroup:
 		return self.iter_counter
 
 	def update(self, ant):
-		print "Update called by %s" % (ant.ID,)
+#		print "Update called by %s" % (ant.ID,)
 		self.ant_counter += 1
 		self.avg_path_cost += ant.path_cost
-		if ant.path_cost < self.bpc:
-			self.bpc = ant.path_cost
+		if ant.path_cost < self.best_path_cost:
+			self.best_path_cost = ant.path_cost
 			self.bpm = ant.path_mat
-			self.bpv = ant.path_vec
+			self.best_path_value = ant.path_vec
 			self.lbpi = self.iter_counter
 		if self.ant_counter == len(self.ants):
 			self.avg_path_cost /= len(self.ants)
 			print "Best: %s, %s, %s, %s" % (
-				self.bpv, self.bpc, self.iter_counter, self.avg_path_cost,)
+				self.best_path_value, self.best_path_cost, self.iter_counter, self.avg_path_cost,)
 
 
 	def done(self):
@@ -165,7 +165,7 @@ class BigGroup:
 		for r in range(0, self.graph.num_nodes):
 			for s in range(0, self.graph.num_nodes):
 				if r != s:
-					delt_tau = self.bpm[r][s] / self.bpc
+					delt_tau = self.bpm[r][s] / self.best_path_cost
 					evaporation = (1 - self.Alpha) * self.graph.tau(r, s)
 					deposition = self.Alpha * delt_tau
 					self.graph.update_tau(r, s, evaporation + deposition)
@@ -233,13 +233,13 @@ def main(argv):
 		nm = int(argv[0])
 
 	if nm <= 10:
-		na = 20
-		ni = 12
-		nr = 1
+		num_ants = 20
+		num_iterations = 12
+		num_repetitions = 1
 	else:
-		na = 28
-		ni = 20
-		nr = 1
+		num_ants = 28
+		num_iterations = 20
+		num_repetitions = 1
 
 	stuff = pickle.load(open(argv[1], "r"))
 	cities = stuff[0]
@@ -254,29 +254,29 @@ def main(argv):
 
 	try:
 		graph = GraphBit(nm, cm)
-		bpv = None
-		bpc = sys.maxint
-		for i in range(0, nr):
-			print "Repetition %s" % i
+		best_path_value = None
+		best_path_cost = sys.maxint
+		for i in range(0, num_repetitions):
+#			print "Repetition %s" % i
 			graph.reset_tau()
-			workers = BigGroup(graph, na, ni)
+			workers = BigGroup(graph, num_ants, num_iterations)
 			print "Colony Started"
 			workers.start()
-			if workers.bpc < bpc:
+			if workers.best_path_cost < best_path_cost:
 				print "Colony Path"
-				bpv = workers.bpv
-				bpc = workers.bpc
+				best_path_value = workers.best_path_value
+				best_path_cost = workers.best_path_cost
 
 		print "\n------------------------------------------------------------"
 		print "					 Results								"
 		print "------------------------------------------------------------"
-		print "\nBest path = %s" % (bpv,)
+		print "\nBest path = %s" % (best_path_value,)
 		city_vec = []
-		for node in bpv:
+		for node in best_path_value:
 			print cities[node] + " ",
 			city_vec.append(cities[node])
-		print "\nBest path cost = %s\n" % (bpc,)
-		results = [bpv, city_vec, bpc]
+		print "\nBest path cost = %s\n" % (best_path_cost,)
+		results = [best_path_value, city_vec, best_path_cost]
 		pickle.dump(results, open(argv[2], 'w+'))
 	except Exception, e:
 		print "exception: " + str(e)
