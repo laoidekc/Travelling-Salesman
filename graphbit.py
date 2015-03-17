@@ -1,7 +1,7 @@
 class GraphBit:
 	def __init__(self, num_nodes, delta_matrix, tau_matrix=None):
 		#print len(delta_matrix)
-		#ensures the size of the array matches the expected number of nodes
+		#ensures the size of the array matrixches the expected number of nodes
 		if len(delta_matrix) != num_nodes:
 			raise Exception("len(delta) != num_nodes")
 		self.num_nodes = num_nodes
@@ -31,6 +31,5 @@ class GraphBit:
 		for r in range(0, self.num_nodes):
 			for s in range(0, self.num_nodes):
 				sum += matrix[r][s]
-
 		avg = sum / (self.num_nodes * self.num_nodes)
 		return avg

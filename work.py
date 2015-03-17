@@ -8,35 +8,35 @@ class Work():
 		self.grouping = colony
 		self.curr_node = self.start_node
 		self.graph = self.grouping.graph
-		self.path_vec = []
-		self.path_vec.append(self.start_node)
+		self.path_vector = []
+		self.path_vector.append(self.start_node)
 		self.path_cost = 0
 		self.Beta = 1.0
 		self.Q0 = 0.5
 		self.Rho = 0.99
-		self.ntv = {}
+		self.nodes_to_visit = {}
 		for i in range(0, self.graph.num_nodes):
 			if i != self.start_node:
-				self.ntv[i] = i
-		self.path_mat = []
+				self.nodes_to_visit[i] = i
+		self.path_matrix = []
 		for i in range(0, self.graph.num_nodes):
-			self.path_mat.append([0] * self.graph.num_nodes)
+			self.path_matrix.append([0] * self.graph.num_nodes)
 
 	def run(self):
 		graph = self.grouping.graph
 		while not self.end():
 			new_node = self.state_transition_rule(self.curr_node)
 			self.path_cost += graph.delta_matrix[self.curr_node][new_node]
-			self.path_vec.append(new_node)
-			self.path_mat[self.curr_node][new_node] = 1 
+			self.path_vector.append(new_node)
+			self.path_matrix[self.curr_node][new_node] = 1 
 			self.local_updating_rule(self.curr_node, new_node)
 			self.curr_node = new_node
-		self.path_cost += graph.delta_matrix[self.path_vec[-1]][self.path_vec[0]]
+		self.path_cost += graph.delta_matrix[self.path_vector[-1]][self.path_vector[0]]
 		self.grouping.update(self)
 		self.__init__(self.ID, self.start_node, self.grouping)
 
 	def end(self):
-		return not self.ntv
+		return not self.nodes_to_visit
 
 
 	def state_transition_rule(self, curr_node):
@@ -45,28 +45,28 @@ class Work():
 		max_node = -1
 		if q < self.Q0:
 			#print "Exploitation"
-			max_val = -1
-			val = None
-			for node in self.ntv.values():
+			max_value = -1
+			value = None
+			for node in self.nodes_to_visit.values():
 				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
-				val = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
-				if val > max_val:
-					max_val = val
+				value = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
+				if value > max_value:
+					max_value = value
 					max_node = node
 		else:
 			#print "Exploration"
 			sum = 0
 			node = -1
-			for node in self.ntv.values():
+			for node in self.nodes_to_visit.values():
 				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
 				sum += graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
 			if sum == 0:
 				raise Exception("sum = 0")
-			avg = sum / len(self.ntv)
+			avg = sum / len(self.nodes_to_visit)
 			#print "avg = %s" % (avg,)
-			for node in self.ntv.values():
+			for node in self.nodes_to_visit.values():
 				p = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
 				if p > avg:
 					#print "p = %s" % (p,)
@@ -75,7 +75,7 @@ class Work():
 				max_node = node
 		if max_node < 0:
 			raise Exception("max_node < 0")
-		del self.ntv[max_node]
+		del self.nodes_to_visit[max_node]
 		return max_node
 
 	def local_updating_rule(self, curr_node, next_node):

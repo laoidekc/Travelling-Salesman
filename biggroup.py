@@ -14,12 +14,12 @@ class BigGroup:
 	#ensures that there is no preset best path
 	def reset(self):
 		self.best_path_cost = sys.maxint
-		self.best_path_value = None
-		self.bpm = None
+		self.best_path_vector = None
+		self.best_path_matrix = None
 
 	#starts the testing
 	def start(self):
-		self.ants = self.c_workers()
+		self.ants = self.colony_workers()
 		self.iter_counter = 0
 
 		while self.iter_counter < self.num_iterations:
@@ -27,7 +27,7 @@ class BigGroup:
 			# Note that this will help refine the results future iterations.
 			self.global_updating_rule()
 
-	#
+	#begins new iteration of ants
 	def iteration(self):
 		self.avg_path_cost = 0
 		self.ant_counter = 0
@@ -35,20 +35,21 @@ class BigGroup:
 		for ant in self.ants:
 			ant.run()
 
+	#updates best path and average path values when an ant is finished
 	def update(self, ant):
 		#print "Update called by %s" % (ant.ID,)
 		self.ant_counter += 1
 		self.avg_path_cost += ant.path_cost
 		if ant.path_cost < self.best_path_cost:
 			self.best_path_cost = ant.path_cost
-			self.bpm = ant.path_mat
-			self.best_path_value = ant.path_vec
+			self.best_path_matrix = ant.path_matrix
+			self.best_path_vector = ant.path_vector
 		if self.ant_counter == len(self.ants):
 			self.avg_path_cost /= len(self.ants)
-			print "Iteration %s: %s - %s" % (self.iter_counter, self.best_path_value, self.best_path_cost,)
+			print "Iteration %s: %s - %s" % (self.iter_counter, self.best_path_vector, self.best_path_cost,)
 
-
-	def c_workers(self):
+	#assigns each ant some work to do
+	def colony_workers(self):
 		self.reset()
 		ants = []
 		for i in range(0, self.num_ants):
@@ -56,15 +57,16 @@ class BigGroup:
 			ants.append(ant)
 
 		return ants
- 
+
+	#updates tau matrix to improve future iterations
 	def global_updating_rule(self):
 		evaporation = 0
 		deposition = 0
 		for r in range(0, self.graph.num_nodes):
 			for s in range(0, self.graph.num_nodes):
 				if r != s:
-					delt_tau = self.bpm[r][s] / self.best_path_cost
+					delta_tau = self.best_path_matrix[r][s] / self.best_path_cost
 					evaporation = (1 - self.Alpha) * self.graph.tau_matrix[r][s]
-					deposition = self.Alpha * delt_tau
+					deposition = self.Alpha * delta_tau
 					self.graph.tau_matrix[r][s] =  evaporation + deposition
 
