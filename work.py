@@ -14,10 +14,10 @@ class Work():
 		self.Beta = 1.0
 		self.Q0 = 0.5
 		self.Rho = 0.99
-		self.nodes_to_visit = {}
+		self.nodes_to_visit = []
 		for i in range(0, self.graph.num_nodes):
 			if i != self.start_node:
-				self.nodes_to_visit[i] = i
+				nodes_to_visit.append(i)
 		self.path_matrix = []
 		for i in range(0, self.graph.num_nodes):
 			self.path_matrix.append([0] * self.graph.num_nodes)
@@ -36,7 +36,7 @@ class Work():
 		self.__init__(self.ID, self.start_node, self.grouping)
 
 	def end(self):
-		return not self.nodes_to_visit
+		return not leen(self.nodes_to_visit)
 
 
 	def state_transition_rule(self, curr_node):
@@ -47,7 +47,7 @@ class Work():
 			#print "Exploitation"
 			max_value = -1
 			value = None
-			for node in self.nodes_to_visit.values():
+			for node in self.nodes_to_visit:
 				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
 				value = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
@@ -58,7 +58,7 @@ class Work():
 			#print "Exploration"
 			sum = 0
 			node = -1
-			for node in self.nodes_to_visit.values():
+			for node in self.nodes_to_visit:
 				if graph.tau_matrix[curr_node][node] == 0:
 					raise Exception("tau = 0")
 				sum += graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
@@ -66,7 +66,7 @@ class Work():
 				raise Exception("sum = 0")
 			avg = sum / len(self.nodes_to_visit)
 			#print "avg = %s" % (avg,)
-			for node in self.nodes_to_visit.values():
+			for node in self.nodes_to_visit:
 				p = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
 				if p > avg:
 					#print "p = %s" % (p,)
