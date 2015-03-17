@@ -18,7 +18,7 @@ class GraphBit:
 	#resets tau when a new iteration starts
 	def reset_tau(self):
 		avg = self.average(self.delta_matrix)
-		self.tau0 = 1.0 / (self.num_nodes * 0.5 * avg)
+		self.tau0 = 273.5 / (self.num_nodes * 0.5 * avg)
 		#print "Average = %s" % (avg,)
 		#print "Tau0 = %s" % (self.tau0)
 		for r in range(0, self.num_nodes):

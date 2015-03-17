@@ -17,14 +17,14 @@ class Work():
 		self.nodes_to_visit = []
 		for i in range(0, self.graph.num_nodes):
 			if i != self.start_node:
-				nodes_to_visit.append(i)
+				self.nodes_to_visit.append(i)
 		self.path_matrix = []
 		for i in range(0, self.graph.num_nodes):
 			self.path_matrix.append([0] * self.graph.num_nodes)
 
 	def run(self):
 		graph = self.grouping.graph
-		while not self.end():
+		while not len(self.nodes_to_visit) == 0:
 			new_node = self.state_transition_rule(self.curr_node)
 			self.path_cost += graph.delta_matrix[self.curr_node][new_node]
 			self.path_vector.append(new_node)
@@ -34,10 +34,6 @@ class Work():
 		self.path_cost += graph.delta_matrix[self.path_vector[-1]][self.path_vector[0]]
 		self.grouping.update(self)
 		self.__init__(self.ID, self.start_node, self.grouping)
-
-	def end(self):
-		return not leen(self.nodes_to_visit)
-
 
 	def state_transition_rule(self, curr_node):
 		graph = self.grouping.graph
@@ -75,7 +71,7 @@ class Work():
 				max_node = node
 		if max_node < 0:
 			raise Exception("max_node < 0")
-		del self.nodes_to_visit[max_node]
+		self.nodes_to_visit.remove(max_node)
 		return max_node
 
 	def local_updating_rule(self, curr_node, next_node):
