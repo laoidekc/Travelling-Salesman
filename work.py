@@ -64,11 +64,9 @@ class Work():
 			#print "avg = %s" % (avg,)
 			for node in self.nodes_to_visit:
 				p = graph.tau_matrix[curr_node][node] * math.pow(graph.eta(curr_node, node), self.Beta)
-				if p > avg:
+				if p >= avg:
 					#print "p = %s" % (p,)
 					max_node = node
-			#if max_node == -1:
-				#max_node = node
 		if max_node < 0:
 			raise Exception("max_node < 0")
 		self.nodes_to_visit.remove(max_node)
