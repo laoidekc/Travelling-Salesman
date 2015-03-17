@@ -5,6 +5,7 @@ import random
 import graphbit
 import biggroup
 import traceback
+import parameters
 
 def main(argv):
 	#seeding random number generator
@@ -13,14 +14,14 @@ def main(argv):
 	num_cities = int(argv[0])
 
 	#decides parameters based on number of cities specified
-	if num_cities <= 10:
-		num_ants = 20
-		num_iterations = 12
-		num_repetitions = 1
+	if num_cities <= parameters.cutoff:
+		num_ants = parameters.num_ants_small
+		num_iterations = parameters.num_iterations_small
+		num_repetitions = parameters.num_repetitions_small
 	else:
-		num_ants = 28
-		num_iterations = 20
-		num_repetitions = 1
+		num_ants = parameters.num_ants_big
+		num_iterations = parameters.num_iterations_big
+		num_repetitions = parameters.num_repetitions_big
 
 	#loads names and distances between cities
 	city_data = pickle.load(open(argv[1], "r"))

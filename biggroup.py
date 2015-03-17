@@ -29,7 +29,7 @@ class BigGroup:
 
 	#begins new iteration of ants
 	def iteration(self):
-		self.avg_path_cost = 0
+		self.average_path_cost = 0
 		self.ant_counter = 0
 		self.iter_counter += 1
 		for ant in self.ants:
@@ -39,13 +39,13 @@ class BigGroup:
 	def update(self, ant):
 		#print "Update called by %s" % (ant.ID,)
 		self.ant_counter += 1
-		self.avg_path_cost += ant.path_cost
+		self.average_path_cost += ant.path_cost
 		if ant.path_cost < self.best_path_cost:
 			self.best_path_cost = ant.path_cost
 			self.best_path_matrix = ant.path_matrix
 			self.best_path_vector = ant.path_vector
 		if self.ant_counter == len(self.ants):
-			self.avg_path_cost /= len(self.ants)
+			self.average_path_cost /= len(self.ants)
 			print "Iteration %s: %s - %s" % (self.iter_counter, self.best_path_vector, self.best_path_cost,)
 
 	#assigns each ant some work to do
