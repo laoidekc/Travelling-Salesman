@@ -28,7 +28,7 @@ def main(argv):
 	city_names = city_data[0]
 	distances = city_data[1]
 
-	#confines the array of city distances to the number 
+	#confines the array of city distances to the number of cities chosen
 	if num_cities < len(distances):
 		distances = distances[0:num_cities]
 		for i in range(0, num_cities):

@@ -42,7 +42,8 @@ class Work():
 		max_node = -1
 		#chooses node with maximum value
 		if random.random() < self.exploitation_chance:
-			#print "Exploitation"
+			if __debug__:
+				print "Exploitation"
 			max_value = -1
 			for node in self.nodes_to_visit:
 				if graph.tau_matrix[current_node][node] == 0:
@@ -54,7 +55,8 @@ class Work():
 
 		#chooses node with  above average value
 		else:
-			#print "Exploration"
+			if __debug__:
+				print "Exploration"
 			sum = 0
 			for node in self.nodes_to_visit:
 				if graph.tau_matrix[current_node][node] == 0:
@@ -63,7 +65,8 @@ class Work():
 			if sum == 0:
 				raise Exception("sum = 0")
 			average = sum / len(self.nodes_to_visit)
-			#print "average = %s" % (average,)
+			if __debug__:
+				print "average = %s" % (average,)
 			for node in self.nodes_to_visit:
 				if graph.tau_matrix[current_node][node] * math.pow(graph.eta(current_node, node), self.Beta) >= average:
 					max_node = node
@@ -73,7 +76,7 @@ class Work():
 		return max_node
 
 	def local_updating_rule(self, current_node, next_node):
-		#Update the pheromones on the tau matrix to represent transitions of the ants
+		#Update the tau matrix to represent transitions of the ants
 		graph = self.grouping.graph
 		graph.tau_matrix[current_node][next_node] = (1 - self.Rho) * graph.tau_matrix[current_node][next_node] + (self.Rho * graph.tau0)
 

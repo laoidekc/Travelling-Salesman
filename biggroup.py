@@ -37,7 +37,8 @@ class BigGroup:
 
 	#updates best path and average path values when an ant is finished
 	def update(self, ant):
-		#print "Update called by %s" % (ant.ID,)
+		if __debug__:
+			print "Update called by %s" % (ant.ID,)
 		self.ant_counter += 1
 		self.average_path_cost += ant.path_cost
 		if ant.path_cost < self.best_path_cost:
