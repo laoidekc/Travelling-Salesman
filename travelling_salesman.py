@@ -1,15 +1,12 @@
 import pickle
 import sys
 import math
-import random
 import graphbit
 import biggroup
 import traceback
 import parameters
 
 def main(argv):
-	#seeding random number generator
-	#random.seed(227)
 
 	num_cities = int(argv[0])
 

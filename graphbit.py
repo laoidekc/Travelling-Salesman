@@ -6,7 +6,7 @@ class GraphBit:
 		if len(delta_matrix) != num_nodes:
 			raise Exception("Number of nodes does not match size of array")
 		self.num_nodes = num_nodes
-		self.delta_matrix = delta_matrix 
+		self.delta_matrix = delta_matrix
 		if tau_matrix is None:
 			self.tau_matrix = []
 			for i in range(0, num_nodes):
