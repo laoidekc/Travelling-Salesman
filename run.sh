@@ -13,4 +13,4 @@ python -O travelling_salesman.py 12 citiesAndDistances.pickled  outputs/output12
 python -O travelling_salesman.py 13 citiesAndDistances.pickled  outputs/output13.pickled
 python -O travelling_salesman.py 14 citiesAndDistances.pickled  outputs/output14.pickled
 
-python tests.py
+python -O tests.py

@@ -9,7 +9,7 @@ import parameters
 
 def main(argv):
 	#seeding random number generator
-	random.seed(227)
+	#random.seed(227)
 
 	num_cities = int(argv[0])
 
@@ -47,7 +47,6 @@ def main(argv):
 			#start testing
 			workers.start()
 			if workers.best_path_cost < best_path_cost:
-				#print "Colony Path"
 				best_path_vector = workers.best_path_vector
 				best_path_cost = workers.best_path_cost
 
