@@ -4,10 +4,10 @@ cutoff		 			= 10
 
 #_small values
 num_ants_small			= 20
-num_iterations_small	= 12
+num_iterations_small		= 12
 num_repetitions_small	= 1
 
 #_big values
-num_ants_big			= 28
+num_ants_big				= 28
 num_iterations_big		= 20
 num_repetitions_big		= 1

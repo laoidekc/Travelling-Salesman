@@ -1,0 +1,31 @@
+This is a Python code that solves the travelling salesman problem using ant colony optimisation. The required source code files are:
+	travelling_salesman.py
+	biggroup.py
+	work.py
+	graphbit.py
+	parameters.py
+
+The code is run by using the command: python -O travelling_salesman.py <number of cities> <city data file> <output file>
+The city data file should be in the pickled format
+The -O flag turns on optimisation and prevents the code from printing unnecessary output information. This flag can be removed to help with debugging (WARNING: output will be extremely long)
+
+The code parameters can be altered in the file parameters.py. Increasing the number of ants, iterations, or repetitions will increase the accuracy and execution time of the code.
+
+The code can be tested using the command: python -O tests.py
+Again, the -O flag can be removed for extra debugging information.
+WARNING: The tests may fail if the values in the parameters file have been changed. If this is this case, ensure that there is a file called parameters.py containing the text below before running any tests.
+
+#Default values for parameters.py:
+#sets cutoff point: If the number of cities is <= this number then the program will use the _small values.
+#					Otherwise the _big values will be used 
+cutoff		 			= 10
+
+#_small values
+num_ants_small			= 20
+num_iterations_small		= 12
+num_repetitions_small	= 1
+
+#_big values
+num_ants_big				= 28
+num_iterations_big		= 20
+num_repetitions_big		= 1
