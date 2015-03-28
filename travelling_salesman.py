@@ -46,7 +46,6 @@ def main(argv):
 			if workers.best_path_cost < best_path_cost:
 				best_path_vector = workers.best_path_vector
 				best_path_cost = workers.best_path_cost
-
 		print "\n------------------------------------------------------------"
 		print "	                 Results                                "
 		print "------------------------------------------------------------"

@@ -4,6 +4,7 @@ import random
 import travelling_salesman
 import graphbit
 import biggroup
+import work
 import sys
 
 class main_tests(unittest.TestCase):
@@ -119,14 +120,19 @@ class biggroup_tests(unittest.TestCase):
 	def setUp(self):
 		num_nodes = 3
 		distances = [[i+num_nodes*j for i in range(num_nodes)] for j in range(num_nodes)]
-		graph = graphbit.GraphBit(num_nodes,distances)
-		self.group = biggroup.BigGroup(graph,1,1)
+		self.graph = graphbit.GraphBit(num_nodes,distances)
+		self.group = biggroup.BigGroup(self.graph,1,1)
 
 	def test_initialisation(self):
 		self.assertTrue(self.group.best_path_cost==sys.maxint,"Best path cost intialised incorrectly")
 		self.assertTrue(self.group.best_path_vector==None,"Best path vector intialised incorrectly")
 		self.assertTrue(self.group.best_path_matrix==None,"Best path matrix intialised incorrectly")
-		
 
+	def test_start(self):
+		random.seed(227)
+		self.graph.reset_tau()
+		self.group.start()
+		self.assertTrue(self.group.best_path_cost==12,"Producing incorrect best path cost")
+		
 if __name__ == '__main__':
 	unittest.main()

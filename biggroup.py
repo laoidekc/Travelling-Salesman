@@ -24,7 +24,7 @@ class BigGroup:
 
 		while self.iter_counter < self.num_iterations:
 			self.iteration()
-			# Note that this will help refine the results future iterations.
+			# this will help refine the results future iterations.
 			self.global_updating_rule()
 
 	#begins new iteration of ants
@@ -66,8 +66,7 @@ class BigGroup:
 		for r in range(0, self.graph.num_nodes):
 			for s in range(0, self.graph.num_nodes):
 				if r != s:
-					delta_tau = self.best_path_matrix[r][s] / self.best_path_cost
 					evaporation = (1 - self.Alpha) * self.graph.tau_matrix[r][s]
-					deposition = self.Alpha * delta_tau
+					deposition = self.Alpha * self.best_path_matrix[r][s] / self.best_path_cost
 					self.graph.tau_matrix[r][s] =  evaporation + deposition
 
