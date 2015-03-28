@@ -3,7 +3,7 @@ import pickle
 import random
 import travelling_salesman
 
-class TestFunctions(unittest.TestCase):
+class main_tests(unittest.TestCase):
 	def setUp(self):
 		random.seed(227)
 

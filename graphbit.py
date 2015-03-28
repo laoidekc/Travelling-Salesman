@@ -2,9 +2,9 @@ class GraphBit:
 	def __init__(self, num_nodes, delta_matrix, tau_matrix=None):
 		if __debug__:
 			print len(delta_matrix)
-		#ensures the size of the array matrixches the expected number of nodes
+		#ensures the size of the array matches the expected number of nodes
 		if len(delta_matrix) != num_nodes:
-			raise Exception("len(delta) != num_nodes")
+			raise Exception("Number of nodes does not match size of array")
 		self.num_nodes = num_nodes
 		self.delta_matrix = delta_matrix 
 		if tau_matrix is None:
