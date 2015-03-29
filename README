@@ -13,6 +13,7 @@ The code parameters can be altered in the file parameters.py. Increasing the num
 
 The code can be tested using the command: python -O tests.py
 Again, the -O flag can be removed for extra debugging information.
+This will run all test classes listed in "test_classes_to_run", which is declared at the bottom of tests.py
 WARNING: The tests may fail if the values in the parameters file have been changed. If this is this case, ensure that there is a file called parameters.py containing the text below before running any tests.
 
 #Default values for parameters.py:
