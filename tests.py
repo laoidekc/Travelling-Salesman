@@ -118,6 +118,7 @@ class graphbit_tests(unittest.TestCase):
 class biggroup_tests(unittest.TestCase):
 
 	def setUp(self):
+		random.seed(227)
 		num_nodes = 3
 		distances = [[i+num_nodes*j for i in range(num_nodes)] for j in range(num_nodes)]
 		self.graph = graphbit.GraphBit(num_nodes,distances)
@@ -129,10 +130,47 @@ class biggroup_tests(unittest.TestCase):
 		self.assertTrue(self.group.best_path_matrix==None,"Best path matrix intialised incorrectly")
 
 	def test_start(self):
-		random.seed(227)
 		self.graph.reset_tau()
 		self.group.start()
 		self.assertTrue(self.group.best_path_cost==12,"Producing incorrect best path cost")
+
+	def test_iteration(self):
+		self.graph.reset_tau()
+		self.group.iter_counter = 0
+		self.group.ants = self.group.colony_workers()
+		self.group.iteration()
+		self.assertTrue(self.group.best_path_cost==12,"Iteration prducing incorrect best path cost")
+		self.assertTrue(self.group.best_path_vector==[1,0,2],"Iteration producing incorrect best path vector")
+		self.assertTrue(self.group.best_path_matrix==[[0, 0, 1], [1, 0, 0], [0, 0, 0]],"Iteration producing incorrect best path matrix")
+
+	def test_update(self):
+		ant = work.Work(0, random.randint(0, self.graph.num_nodes - 1), self)
+		self.group.ant_counter = 0
+		self.group.average_path_cost = 0
+		self.group.iter_counter = 0
+		self.group.ants = []
+		self.group.ants.append(ant)
+		ant.path_cost = 77
+		ant.path_vector = [0,1,2]
+		ant.path_matrix = [[0,0,1],[0,1,0],[0,0,0]]
+		self.group.update(ant)
+		self.assertTrue(self.group.best_path_cost==77,"Updating changes best path cost")
+		self.assertTrue(self.group.best_path_vector==[0,1,2],"Updating changes best path vector")
+		self.assertTrue(self.group.best_path_matrix==[[0,0,1], [0,1,0], [0,0,0]],"Updating changes best path matrix")
 		
 if __name__ == '__main__':
-	unittest.main()
+	#Add the names of test classes to this list in order to have them run.
+	#Remove the names of any uneccesary test classes.
+	test_classes_to_run = [main_tests, graphbit_tests, biggroup_tests]
+
+	loader = unittest.TestLoader()
+
+	suites_list = []
+	for test_class in test_classes_to_run:
+		suite = loader.loadTestsFromTestCase(test_class)
+		suites_list.append(suite)
+
+	big_suite = unittest.TestSuite(suites_list)
+
+	runner = unittest.TextTestRunner()
+	results = runner.run(big_suite)
